@@ -58,5 +58,4 @@ class SettingManager(cxt: Context?) {
             false -> UiMode.LIGHT
         }
     }
-
 }

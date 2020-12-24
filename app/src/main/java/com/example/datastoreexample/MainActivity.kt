@@ -31,39 +31,58 @@ class MainActivity : AppCompatActivity() {
     private fun initViews() {
         findViewById<ImageButton>(R.id.imageButton).setOnClickListener {
             Log.d(mTag, "clicked")
-            lifecycleScope.launch {
-                when (isDarkMode) {
-                    true -> {
-                        Log.d(mTag, "light clicked")
-                        settingsManager?.setUiMode(UiMode.LIGHT)
-                    }
-                    false -> {
-                        Log.d(mTag, "dark clicked")
-                        settingsManager?.setUiMode(UiMode.DARK)
-                    }
-                }
-            }
+            setTheme()
         }
 
         findViewById<Button>(R.id.button).setOnClickListener {
-            lifecycleScope.launch {
-                settingsManager?.setName(findViewById<EditText>(R.id.editTextTextPersonName).text!!.toString())
+            setPersonName()
+        }
+    }
+
+    private fun setPersonName() {
+        lifecycleScope.launch {
+            settingsManager?.setName(findViewById<EditText>(R.id.editTextTextPersonName).text!!.toString())
+        }
+    }
+
+    private fun setTheme() {
+        lifecycleScope.launch {
+            when (isDarkMode) {
+                true -> {
+                    Log.d(mTag, "light clicked")
+                    settingsManager?.setUiMode(UiMode.LIGHT)
+                }
+                false -> {
+                    Log.d(mTag, "dark clicked")
+                    settingsManager?.setUiMode(UiMode.DARK)
+                }
             }
         }
     }
 
     private fun observeUiPreferences() {
+
         settingsManager?.uiTheme?.asLiveData()?.observe(this) { uiMode ->
             when (uiMode) {
                 UiMode.LIGHT -> {
                     Log.d(mTag, "light observe")
                     isDarkMode = false
-                    findViewById<ConstraintLayout>(R.id.mainLayout).setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                    findViewById<ConstraintLayout>(R.id.mainLayout).setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.white
+                        )
+                    )
                 }
                 UiMode.DARK -> {
                     Log.d(mTag, "dark observe")
                     isDarkMode = true
-                    findViewById<ConstraintLayout>(R.id.mainLayout).setBackgroundColor(ContextCompat.getColor(this, R.color.black))
+                    findViewById<ConstraintLayout>(R.id.mainLayout).setBackgroundColor(
+                        ContextCompat.getColor(
+                            this,
+                            R.color.black
+                        )
+                    )
                 }
                 else -> {
                     println("nothing observe")
@@ -76,6 +95,7 @@ class MainActivity : AppCompatActivity() {
                 findViewById<EditText>(R.id.editTextTextPersonName).setText(s)
             }
         }
+
     }
 
 }
